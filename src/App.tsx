@@ -27,7 +27,7 @@ function Portrait() {
           <source type="image/webp" srcSet="/images/profile-480.webp 480w, /images/profile-800.webp 800w" sizes="(max-width: 600px) 82vw, (max-width: 1000px) 40vw, 380px" />
           <img src="/images/profile.jpg" width="800" height="811" alt="Professional portrait of Nitesh Kumar, wearing glasses and a checkered shirt" fetchPriority="high" decoding="async" />
         </picture>
-        <figcaption><div><strong>{profile.name}</strong><span>Developer · IIT Kanpur</span></div><Code2 size={22} aria-hidden="true" /></figcaption>
+        <figcaption><div><strong>{profile.name}</strong><span>Undergraduate · IIT Kanpur</span></div><Code2 size={22} aria-hidden="true" /></figcaption>
       </figure>
       <div className="portrait-chip chip-react" aria-hidden="true"><Atom size={22} /><span>React<small>Component thinking</small></span></div>
       <div className="portrait-chip chip-typescript" aria-hidden="true"><span className="ts-mark">TS</span><span>TypeScript<small>Typed. Thoughtful.</small></span></div>
@@ -42,7 +42,7 @@ function Hero() {
   return <section className="hero container" aria-labelledby="hero-title">
     <div className="hero-glow" aria-hidden="true" />
     <Reveal className="hero-copy">
-      <div className="hero-kicker"><span /> SOFTWARE DEVELOPER · REACT / TYPESCRIPT</div>
+      <div className="hero-kicker"><span /> UNDERGRADUATE · IIT KANPUR</div>
       <m.p className="hero-greeting" initial={reduced ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6 }}>Hi, I’m <strong>{profile.name}.</strong></m.p>
       <h1 id="hero-title">Thoughtful interfaces.<br /><span>Solid engineering.</span></h1>
       <m.p className="hero-intro" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.7 }}>I build with React and TypeScript, bringing an engineering background in backend APIs, C++ systems, and applied machine learning to the frontend.</m.p>
@@ -77,8 +77,8 @@ function Architecture({ compact = false }: { compact?: boolean }) {
   return <div className={`architecture ${compact ? 'compact' : ''}`} aria-label="Key-value store architecture: Command Parser, Storage Engine, Expiry Manager, and Database">
     <div className="arch-top"><span className="window-dots"><i /><i /><i /></span><span>kv-store / architecture</span><Code2 size={14} /></div>
     <div className="arch-content">
-      <div className="code-line"><span>01</span><code><b>SET</b> developer <em>"Nitesh"</em></code><span className="code-ok">OK</span></div>
-      <div className="code-line"><span>02</span><code><b>GET</b> developer</code><span className="code-cursor" /></div>
+      <div className="code-line"><span>01</span><code><b>SET</b> student <em>"Nitesh"</em></code><span className="code-ok">OK</span></div>
+      <div className="code-line"><span>02</span><code><b>GET</b> student</code><span className="code-cursor" /></div>
       <div className="arch-flow"><div><Terminal size={17} /><span>Command Parser</span></div><i /><div className="engine"><Database size={20} /><span>Storage Engine</span><small>unordered_map · unordered_set</small></div><div className="arch-branches"><div><Layers3 size={16} /><span>Expiry Manager</span><small>std::chrono</small></div><div><Database size={16} /><span>Database</span><small>File persistence</small></div></div></div>
       <div className="arch-bottom"><span><i /> C++ / STL</span><span>O(1) average operations</span></div>
     </div>

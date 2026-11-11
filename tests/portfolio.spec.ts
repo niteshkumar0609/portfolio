@@ -7,7 +7,7 @@ test('portfolio renders without runtime errors or horizontal overflow', async ({
   page.on('pageerror', error => errors.push(error.message))
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/')
-  await expect(page).toHaveTitle('Nitesh Kumar | Software Developer')
+  await expect(page).toHaveTitle('Nitesh Kumar | Undergraduate at IIT Kanpur')
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Thoughtful interfaces.')
   for (const section of ['playground', 'about', 'projects', 'experience', 'skills', 'education', 'achievements', 'contact']) {
     await expect(page.locator(`#${section}`)).toBeAttached()

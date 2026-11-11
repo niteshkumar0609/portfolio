@@ -1,4 +1,4 @@
-# Nitesh Kumar · Developer Portfolio
+# Nitesh Kumar · Undergraduate Portfolio
 
 A responsive React, TypeScript, and Vite portfolio with Tailwind CSS v4, Motion for React, and Lucide React. All biographical content and external profile/project links come from the supplied `resume.pdf`.
 
