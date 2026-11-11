@@ -12,6 +12,9 @@
     }
   },
   "scripts": {
+    "pages:generate": "node scripts/generate-pages.mjs",
+    "predev": "npm run pages:generate",
+    "prebuild": "npm run pages:generate",
     "dev": "vite --host 127.0.0.1",
     "build": "tsc -b && vite build",
     "lint": "eslint . --max-warnings 0",

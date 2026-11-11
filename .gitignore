@@ -22,3 +22,10 @@ Thumbs.db
 .git-credentials
 .netrc
 *service-account*.json
+# HTML entry points regenerated before dev/build from index.html and site-pages.json
+/about/index.html
+/projects/index.html
+/ui-lab/index.html
+/experience/index.html
+/contact/index.html
+/404.html

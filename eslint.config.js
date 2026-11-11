@@ -8,6 +8,7 @@ export default tseslint.config(
   { ignores: ['dist/**', 'test-results/**', 'playwright-report/**', '.vercel/**'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
+  { files: ['scripts/**/*.mjs'], languageOptions: { globals: globals.node } },
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: { globals: globals.browser },

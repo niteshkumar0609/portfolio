@@ -31,7 +31,9 @@ The production preview is normally at http://127.0.0.1:4173. Build output is in 
 ## Content and maintenance
 
 - `src/data.ts`: verified personal information, skills, project descriptions, and exact resume URLs.
-- `src/App.tsx`: sections, interactions, and conceptual project illustrations.
+- `src/App.tsx`: shared navigation and separate Home, About, Projects, UI Lab, Experience, and Contact page components.
+- `src/site-pages.json`: page URLs, labels, titles, and descriptions.
+- `scripts/generate-pages.mjs`: generates HTML entry points and sitemap before dev/build. Generated HTML shares the root template and does not need manual editing.
 - `src/styles.css`: responsive dark theme, focus styles, and reduced-motion behavior.
 - `src/refinements.css`: portrait-led charcoal theme, card refinements, timeline styling, and responsive visual upgrades.
 - `profile.jpg`: portrait source, recreated from the previously supplied photo because no root `profile.jpg` was present during implementation. Facial features and colors were not retouched.
@@ -58,7 +60,9 @@ The initial production deployment was published through Vercel CLI with the owne
 5. No environment variables are needed. Review the configuration, then deploy only when you approve publishing.
 6. Once the final public domain is known, add its canonical URL and `og:url` to `index.html`. A sitemap can then use that exact domain; none is fabricated here.
 
-The site uses section anchors on a single page, so it does not require SPA route rewrites.
+The site now has separate documents at `/`, `/about/`, `/projects/`, `/ui-lab/`, `/experience/`, and `/contact/`. About contains all technical skills, education, coursework, and achievements. Home contains the introduction and portrait with links to the other pages. Each page has its own title, description, and canonical URL, and Vite emits an HTML file for every page. Vercel serves those static documents directly, including page refreshes; no catch-all SPA rewrite is needed. Trailing-slash URLs are configured consistently, and a custom `404.html` is built. The UI Lab code is loaded only on its own page.
+
+Old bookmarks such as `/#projects`, `/#playground`, and `/#education` redirect to the corresponding new page/section. Existing portrait, project filters, contact controls, and resume downloads are preserved. Future updates require explicit publication approval.
 
 `vercel.json` explicitly selects Vite, `npm ci`, `npm run build`, and `dist`, and sets basic response security headers. Set the Vercel project's Node.js runtime to 22.x. Configuration reference: https://vercel.com/docs/project-configuration/vercel-json.
 

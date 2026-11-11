@@ -1,12 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, lazy, useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion, useScroll, useSpring } from 'motion/react'
-import { ArrowDown, ArrowDownToLine, ArrowRight, ArrowUpRight, Atom, BrainCircuit, Check, ChevronDown, Code2, Copy, Database, ExternalLink, Github, GraduationCap, Layers3, Linkedin, Mail, Menu, Sparkles, Terminal, Trophy, Wrench, X } from 'lucide-react'
+import { ArrowDownToLine, ArrowRight, ArrowUpRight, Atom, BrainCircuit, Check, ChevronDown, Code2, Copy, Database, ExternalLink, Github, GraduationCap, Layers3, Linkedin, Mail, Menu, Sparkles, Terminal, Trophy, Wrench, X } from 'lucide-react'
 import { courses, profile, projects, skills } from './data'
-import InterfaceLab from './components/InterfaceLab'
 import Tilt from './components/Tilt'
+import pages from './site-pages.json'
 
-const nav = [['Projects', 'projects'], ['UI Lab', 'playground'], ['About', 'about'], ['Experience', 'experience'], ['Skills', 'skills']] as const
+const InterfaceLab = lazy(() => import('./components/InterfaceLab'))
+
+const nav = pages.map(page => [page.label, page.path] as const)
 const skillIcons = [Code2, Database, Layers3, BrainCircuit, Sparkles, Wrench]
 const frontendSkillsFirst = [2, 0, 5, 1, 3, 4].map(index => ({ ...skills[index], Icon: skillIcons[index] }))
 
@@ -47,12 +49,12 @@ function Hero() {
       <h1 id="hero-title">Thoughtful interfaces.<br /><span>Solid engineering.</span></h1>
       <m.p className="hero-intro" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.7 }}>I build with React and TypeScript, bringing an engineering background in backend APIs, C++ systems, and applied machine learning to the frontend.</m.p>
       <p className="hero-sub">Electrical Engineering undergraduate at IIT Kanpur.<br />Curious about how software looks, feels, and works.</p>
-      <div className="hero-actions"><a className="button primary" href="#projects">Explore my work<ArrowUpRight size={17} /></a><a className="button secondary" href="/resume.pdf" download="Nitesh-Kumar-Resume.pdf"><ArrowDownToLine size={16} /> Download resume</a></div>
-      <div className="hero-links"><a href={profile.github} target="_blank" rel="noopener noreferrer"><Github size={17} />GitHub<ArrowUpRight size={13} /></a><a href="#contact"><Mail size={17} />Let’s connect<ArrowUpRight size={13} /></a><a href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile (opens in a new tab)"><Linkedin size={17} /><span className="hero-link-label">LinkedIn</span><ArrowUpRight size={13} /></a></div>
-      <a className="hero-lab-link" href="#playground"><MouseIcon />Try the interactive UI lab<ArrowRight size={14} /></a>
+      <div className="hero-actions"><a className="button primary" href="/projects/">Explore my work<ArrowUpRight size={17} /></a><a className="button secondary" href="/resume.pdf" download="Nitesh-Kumar-Resume.pdf"><ArrowDownToLine size={16} /> Download resume</a></div>
+      <div className="hero-links"><a href={profile.github} target="_blank" rel="noopener noreferrer"><Github size={17} />GitHub<ArrowUpRight size={13} /></a><a href="/contact/"><Mail size={17} />Let’s connect<ArrowUpRight size={13} /></a><a href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile (opens in a new tab)"><Linkedin size={17} /><span className="hero-link-label">LinkedIn</span><ArrowUpRight size={13} /></a></div>
+      <a className="hero-lab-link" href="/ui-lab/"><MouseIcon />Try the interactive UI lab<ArrowRight size={14} /></a>
     </Reveal>
     <Portrait />
-    <div className="hero-bottom"><span>REACT <i /> TYPESCRIPT <i /> INTERACTION & MOTION</span><a href="#playground">Scroll to explore<ArrowDown size={14} /></a></div>
+    <div className="hero-bottom"><span>REACT <i /> TYPESCRIPT <i /> INTERACTION & MOTION</span><a href="/ui-lab/">Explore the UI Lab<ArrowRight size={14} /></a></div>
   </section>
 }
 
@@ -62,7 +64,7 @@ function ProjectsSection() {
   const [filter, setFilter] = useState('All work')
   const options = ['All work', 'Applications', 'Systems', 'Machine learning']
   const visibleProjects = projects.filter(project => filter === 'All work' || (filter === 'Applications' ? project.visual === 'ticket' : filter === 'Systems' ? project.visual === 'store' : !['ticket', 'store'].includes(project.visual)))
-  return <section id="projects" className="section projects-section"><div className="container"><Reveal className="section-heading"><div><div className="section-label">02 / SELECTED WORK</div><h2>Interfaces to internals.<br /><span>Built with intent.</span></h2></div><p>Explore the frontend work in the UI Lab above,<br />then the engineering projects from my resume.</p></Reveal><div className="project-toolbar"><div role="group" aria-label="Filter projects" className="project-filters">{options.map(option => <button key={option} aria-pressed={filter === option} onClick={() => setFilter(option)}>{option}</button>)}</div><span className="project-count" aria-live="polite">{visibleProjects.length} {visibleProjects.length === 1 ? 'project' : 'projects'}</span></div><div className="projects-grid">{visibleProjects.map(project => <ProjectCard key={project.title} project={project} index={projects.indexOf(project)} />)}</div><a href={profile.github} className="github-banner" target="_blank" rel="noopener noreferrer"><div><Github size={21} /><span>More code. More context.<small>Explore my GitHub profile.</small></span></div><ArrowUpRight size={22} /></a></div></section>
+  return <section id="projects" className="section projects-section"><div className="container"><Reveal className="section-heading"><div><div className="section-label">02 / SELECTED WORK</div><h2>Interfaces to internals.<br /><span>Built with intent.</span></h2></div><p>Engineering projects from my resume.<br /><a className="text-link" href="/ui-lab/">Try the interactive UI Lab<ArrowUpRight size={13} /></a></p></Reveal><div className="project-toolbar"><div role="group" aria-label="Filter projects" className="project-filters">{options.map(option => <button key={option} aria-pressed={filter === option} onClick={() => setFilter(option)}>{option}</button>)}</div><span className="project-count" aria-live="polite">{visibleProjects.length} {visibleProjects.length === 1 ? 'project' : 'projects'}</span></div><div className="projects-grid">{visibleProjects.map(project => <ProjectCard key={project.title} project={project} index={projects.indexOf(project)} />)}</div><a href={profile.github} className="github-banner" target="_blank" rel="noopener noreferrer"><div><Github size={21} /><span>More code. More context.<small>Explore my GitHub profile.</small></span></div><ArrowUpRight size={22} /></a></div></section>
 }
 
 function Socials({ text = false }: { text?: boolean }) {
@@ -104,15 +106,81 @@ function ProjectCard({ project, index }: { project: typeof projects[number]; ind
   </Reveal>
 }
 
+function AboutSection() {
+  return <section id="about" className="section container"><Reveal className="about-grid"><div><div className="section-label">01 / ABOUT</div><h2>An engineering mindset.<br /><span>A builder’s curiosity.</span></h2></div><div className="about-copy"><p>I’m a fourth-year Electrical Engineering undergraduate at the Indian Institute of Technology Kanpur, with hands-on experience building backend services at EleWin.</p><p>My work spans authenticated recruiter APIs, a modular C++ storage engine, Flutter ticketing workflows, and machine learning models. Across these projects, I’ve worked with data structures, application architecture, and model evaluation.</p><a className="text-link" href="/experience/">See where I’ve contributed<ArrowRight size={16} /></a></div></Reveal><Reveal className="focus-strip"><div><Code2 /><span>Backend development<small>APIs, authentication & data workflows</small></span></div><div><Database /><span>Systems thinking<small>Data structures, modularity & persistence</small></span></div><div><Layers3 /><span>Applied machine learning<small>Text, tabular data & time series</small></span></div></Reveal></section>
+}
+
+function ExperiencePage() {
+  return <section id="experience" className="section container"><Reveal className="section-heading"><div><div className="section-label">03 / EXPERIENCE</div><h2>Building for<br /><span>real workflows.</span></h2></div><span className="section-side-note">BACKEND ENGINEERING</span></Reveal><Reveal className="experience"><div className="experience-meta"><span className="experience-mark">E<span>↗</span></span><h3>EleWin</h3><p>Apr 2026 – Jul 2026</p><a href="https://app.elewin.in" className="text-link" target="_blank" rel="noopener noreferrer">Company platform<ExternalLink size={13} /></a></div><div className="experience-body"><div className="role-label">WORK EXPERIENCE</div><h3>Backend Developer</h3><p>Developed the API layer behind recruiter workflows, from job management to candidate review and shortlisting.</p><ul><li>Built REST APIs with Node.js, Express.js, and MongoDB for job roles, candidate search, filtering, and profiles.</li><li>Implemented reusable JWT authentication, validation, and role-based access control middleware for protected recruiter APIs.</li><li>Designed job and candidate status APIs to support reviews, shortlisting, and updates.</li><li>Developed recruiter dashboard APIs with MongoDB queries and error handling to retrieve candidate and job data.</li></ul><div className="tags">{['Node.js', 'Express.js', 'MongoDB', 'JWT', 'RBAC'].map(tag => <span key={tag}>{tag}</span>)}</div></div></Reveal></section>
+}
+
+function SkillsSection() {
+  return <section id="skills" className="section skills-section"><div className="container"><Reveal className="section-heading"><div><div className="section-label">04 / TECHNICAL TOOLKIT</div><h2>The tools behind<br /><span>the work.</span></h2></div><p>Languages, frameworks, and tools<br />from my technical experience and projects.</p></Reveal><div className="skills-grid">{frontendSkillsFirst.map((group, index) => { const Icon = group.Icon; return <Reveal className="skill-group" key={group.title}><div className="skill-header"><Icon size={21} aria-hidden="true" /><span className="skill-number">0{index + 1}</span></div><h3>{group.title}</h3><div className="skill-items">{group.items.map(skill => <span key={skill}>{skill}</span>)}</div></Reveal> })}</div></div></section>
+}
+
+function EducationSection() {
+  return <section id="education" className="section container"><Reveal className="section-heading"><div><div className="section-label">05 / EDUCATION</div><h2>A foundation<br /><span>in engineering.</span></h2></div><GraduationCap className="section-icon" size={36} /></Reveal><Reveal className="education-main"><div className="education-year">2023 — PRESENT<span>BACHELOR’S DEGREE</span></div><div><h3>Indian Institute of Technology Kanpur</h3><p>B.Tech · Electrical Engineering</p></div><div className="grade">7.0<span>CPI / 10</span></div></Reveal><div className="school-grid"><Reveal className="school"><span>2022 · CLASS XII / RBSE</span><h3>M.D. Sr. Sec. School, Chirawa</h3><p>93.20%</p></Reveal><Reveal className="school"><span>2020 · CLASS X / RBSE</span><h3>M.D. Sr. Sec. School, Chirawa</h3><p>90.17%</p></Reveal></div><Reveal className="coursework"><h3>Relevant coursework</h3><div className="tags">{courses.map(course => <span key={course}>{course}</span>)}</div></Reveal></section>
+}
+
+function AchievementsSection() {
+  return <section id="achievements" className="section achievements-section"><div className="container"><Reveal className="section-heading"><div><div className="section-label">06 / BEYOND THE CODE</div><h2>Team spirit.<br /><span>On and off the field.</span></h2></div><p>Achievements and campus involvement<br />at IIT Kanpur.</p></Reveal><div className="achievements-grid"><Reveal className="achievement"><Trophy /><span>INFERNO ’24 · HOCKEY</span><h3>Second place.<br />Shared effort.</h3><p>Secured 2nd prize in Hockey at IIT Kanpur’s annual inter-pool sports championship.</p></Reveal><Reveal className="achievement"><span className="activity-symbol">↗</span><span>INFERNO ’24 · CRICKET</span><h3>Part of the game.</h3><p>Participated in Cricket at IIT Kanpur’s annual inter-pool sports championship.</p></Reveal><Reveal className="achievement"><span className="activity-symbol">✳</span><span>GALAXY ’24 · CULTURAL</span><h3>Representing the hall.</h3><p>Contributed to Galaxy ’24 events and represented the hall in the Galaxy Parade.</p></Reveal></div></div></section>
+}
+
+function ContactPage() {
+  const [copied, setCopied] = useState(false)
+  const [copyError, setCopyError] = useState(false)
+  const copyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  useEffect(() => () => clearTimeout(copyTimer.current), [])
+  async function copyEmail() {
+    try {
+      await navigator.clipboard.writeText(profile.email)
+      setCopied(true)
+      setCopyError(false)
+      clearTimeout(copyTimer.current)
+      copyTimer.current = setTimeout(() => setCopied(false), 2500)
+    } catch { setCopyError(true) }
+  }
+  return <section id="contact" className="section container contact-section"><Reveal><div className="section-label">07 / LET’S CONNECT</div><h2>Have something<br /><span>worth building?</span></h2><p>For software engineering opportunities, project conversations,<br className="desktop-break" /> or a simple hello — get in touch.</p><a className="email-link" href={`mailto:${profile.email}`}>{profile.email}<ArrowUpRight /></a><div className="contact-actions"><a className="button primary" href={`mailto:${profile.email}`}><Mail size={16} />Say hello<ArrowUpRight size={16} /></a><button className="button secondary" onClick={copyEmail}>{copied ? <Check size={16} /> : <Copy size={16} />}{copied ? 'Email copied' : 'Copy email'}</button></div><div className="copy-feedback" role="status">{copied ? 'Email address copied to clipboard.' : copyError ? `Please copy the email address above: ${profile.email}` : ''}</div><Socials text /></Reveal><Reveal className="resume-panel"><div className="resume-icon"><ArrowDownToLine size={27} /></div><div className="section-label">THE COMPLETE PICTURE</div><h3>My experience.<br />In one document.</h3><p>Projects, technical skills, education,<br />and experience from my resume.</p><a href="/resume.pdf" download="Nitesh-Kumar-Resume.pdf" className="text-link">Download resume <ArrowDownToLine size={17} /></a><span className="pdf-label">PDF DOCUMENT</span></Reveal></section>
+}
+
+function AboutPage() {
+  return <><nav className="about-tabs container" aria-label="About page sections">{[['About', 'about'], ['Skills', 'skills'], ['Education', 'education'], ['Achievements', 'achievements']].map(([label, id]) => <a key={id} href={`#${id}`}>{label}<ArrowDownToLine size={12} /></a>)}</nav><AboutSection /><SkillsSection /><EducationSection /><AchievementsSection /></>
+}
+
+function HomePage() {
+  return <><Hero /><section className="home-explore container" aria-label="Explore the portfolio"><a href="/projects/"><Code2 size={20} /><div><span>Selected projects</span><p>Explore the engineering.</p></div><ArrowUpRight size={19} /></a><a href="/ui-lab/"><Sparkles size={20} /><div><span>Interactive UI Lab</span><p>Try the frontend craft.</p></div><ArrowUpRight size={19} /></a><a href="/about/"><GraduationCap size={20} /><div><span>About me</span><p>Get to know my background.</p></div><ArrowUpRight size={19} /></a></section></>
+}
+
+const legacyTargets: Record<string, string> = {
+  about: '/about/', skills: '/about/#skills', education: '/about/#education', achievements: '/about/#achievements',
+  projects: '/projects/', playground: '/ui-lab/', experience: '/experience/', contact: '/contact/',
+}
+
 function App() {
   const { scrollYProgress } = useScroll()
   const readingProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
+  const reduced = useReducedMotion()
   const [menuOpen, setMenuOpen] = useState(false)
-  const [copied, setCopied] = useState(false)
-  const [copyError, setCopyError] = useState(false)
   const menuButton = useRef<HTMLButtonElement>(null)
-  const copyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
-  useEffect(() => () => clearTimeout(copyTimer.current), [])
+  const normalizedPath = window.location.pathname.replace(/\/index\.html$/, '/').replace(/\/+$/, '') || '/'
+  const currentPage = pages.find(page => (page.path.replace(/\/+$/, '') || '/') === normalizedPath) ?? {
+    id: 'not-found', label: 'Page not found', path: window.location.pathname,
+  }
+
+  useEffect(() => {
+    function followFragment() {
+      const fragment = window.location.hash.slice(1)
+      if (window.location.pathname === '/' && legacyTargets[fragment]) {
+        window.location.replace(legacyTargets[fragment])
+        return
+      }
+      if (fragment) requestAnimationFrame(() => document.getElementById(fragment)?.scrollIntoView())
+    }
+    followFragment()
+    window.addEventListener('hashchange', followFragment)
+    return () => window.removeEventListener('hashchange', followFragment)
+  }, [])
+
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && menuOpen) { setMenuOpen(false); menuButton.current?.focus() }
@@ -120,38 +188,28 @@ function App() {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [menuOpen])
-  async function copyEmail() {
-    try {
-      await navigator.clipboard.writeText(profile.email)
-      setCopied(true); setCopyError(false)
-      clearTimeout(copyTimer.current)
-      copyTimer.current = setTimeout(() => setCopied(false), 2500)
-    } catch { setCopyError(true) }
+
+  let content: ReactNode
+  switch (currentPage.id) {
+    case 'home': content = <HomePage />; break
+    case 'about': content = <AboutPage />; break
+    case 'projects': content = <ProjectsSection />; break
+    case 'ui-lab': content = <Suspense fallback={<div className="page-loading container" role="status">Loading the interactive UI Lab…</div>}><InterfaceLab /></Suspense>; break
+    case 'experience': content = <ExperiencePage />; break
+    case 'contact': content = <ContactPage />; break
+    default: content = <section className="not-found container"><h2>Let’s get you back<br /><span>to familiar ground.</span></h2><p>The page you’re looking for isn’t part of this portfolio.</p><a className="button primary" href="/">Back to Home<ArrowRight size={16} /></a></section>
   }
+
   return <LazyMotion features={domAnimation}><a href="#main" className="skip-link">Skip to content</a>
-    <header className="header"><div className="container nav-inner"><a href="#" className="brand" aria-label="Nitesh Kumar home">n<span>k</span><i>.</i></a><nav className="desktop-nav" aria-label="Main navigation">{nav.map(([label, id]) => <a key={id} href={`#${id}`}>{label}</a>)}</nav><a className="nav-contact" href="#contact">Let’s talk<ArrowUpRight size={15} /></a><button ref={menuButton} className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-nav" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}>{menuOpen ? <X /> : <Menu />}</button></div>
+    <header className="header"><div className="container nav-inner"><a href="/" className="brand" aria-label="Nitesh Kumar home">n<span>k</span><i>.</i></a><nav className="desktop-nav" aria-label="Main navigation">{nav.map(([label, url]) => <a key={url} href={url} aria-current={currentPage.path === url ? 'page' : undefined}>{label}</a>)}</nav><a className="nav-contact" href="/contact/">Let’s talk<ArrowUpRight size={15} /></a><button ref={menuButton} className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-nav" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}>{menuOpen ? <X /> : <Menu />}</button></div>
       <m.div className="reading-progress" style={{ scaleX: readingProgress }} aria-hidden="true" />
-      <AnimatePresence>{menuOpen && <m.nav id="mobile-nav" className="mobile-nav" aria-label="Mobile navigation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>{[...nav, ['Contact', 'contact']].map(([label, id]) => <a key={id} onClick={() => setMenuOpen(false)} href={`#${id}`}>{label}<ArrowUpRight size={16} /></a>)}</m.nav>}</AnimatePresence>
+      <AnimatePresence>{menuOpen && <m.nav id="mobile-nav" className="mobile-nav" aria-label="Mobile navigation" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>{nav.map(([label, url]) => <a key={url} onClick={() => setMenuOpen(false)} href={url} aria-current={currentPage.path === url ? 'page' : undefined}>{label}<ArrowUpRight size={16} /></a>)}</m.nav>}</AnimatePresence>
     </header>
-    <main id="main">
-      <Hero />
-      <InterfaceLab />
-
-      <section id="about" className="section container"><Reveal className="about-grid"><div><div className="section-label">01 / ABOUT</div><h2>An engineering mindset.<br /><span>A builder’s curiosity.</span></h2></div><div className="about-copy"><p>I’m a fourth-year Electrical Engineering undergraduate at the Indian Institute of Technology Kanpur, with hands-on experience building backend services at EleWin.</p><p>My work spans authenticated recruiter APIs, a modular C++ storage engine, Flutter ticketing workflows, and machine learning models. Across these projects, I’ve worked with data structures, application architecture, and model evaluation.</p><a className="text-link" href="#experience">See where I’ve contributed<ArrowRight size={16} /></a></div></Reveal><Reveal className="focus-strip"><div><Code2 /><span>Backend development<small>APIs, authentication & data workflows</small></span></div><div><Database /><span>Systems thinking<small>Data structures, modularity & persistence</small></span></div><div><Layers3 /><span>Applied machine learning<small>Text, tabular data & time series</small></span></div></Reveal></section>
-
-      <ProjectsSection />
-
-      <section id="experience" className="section container"><Reveal className="section-heading"><div><div className="section-label">03 / EXPERIENCE</div><h2>Building for<br /><span>real workflows.</span></h2></div><span className="section-side-note">BACKEND ENGINEERING</span></Reveal><Reveal className="experience"><div className="experience-meta"><span className="experience-mark">E<span>↗</span></span><h3>EleWin</h3><p>Apr 2026 – Jul 2026</p><a href="https://app.elewin.in" className="text-link" target="_blank" rel="noopener noreferrer">Company platform<ExternalLink size={13} /></a></div><div className="experience-body"><div className="role-label">WORK EXPERIENCE</div><h3>Backend Developer</h3><p>Developed the API layer behind recruiter workflows, from job management to candidate review and shortlisting.</p><ul><li>Built REST APIs with Node.js, Express.js, and MongoDB for job roles, candidate search, filtering, and profiles.</li><li>Implemented reusable JWT authentication, validation, and role-based access control middleware for protected recruiter APIs.</li><li>Designed job and candidate status APIs to support reviews, shortlisting, and updates.</li><li>Developed recruiter dashboard APIs with MongoDB queries and error handling to retrieve candidate and job data.</li></ul><div className="tags">{['Node.js', 'Express.js', 'MongoDB', 'JWT', 'RBAC'].map(tag => <span key={tag}>{tag}</span>)}</div></div></Reveal></section>
-
-      <section id="skills" className="section skills-section"><div className="container"><Reveal className="section-heading"><div><div className="section-label">04 / TECHNICAL TOOLKIT</div><h2>The tools behind<br /><span>the work.</span></h2></div><p>Languages, frameworks, and tools<br />from my technical experience and projects.</p></Reveal><div className="skills-grid">{frontendSkillsFirst.map((group, index) => { const Icon = group.Icon; return <Reveal className="skill-group" key={group.title}><div className="skill-header"><Icon size={21} aria-hidden="true" /><span className="skill-number">0{index + 1}</span></div><h3>{group.title}</h3><div className="skill-items">{group.items.map(skill => <span key={skill}>{skill}</span>)}</div></Reveal> })}</div></div></section>
-
-      <section id="education" className="section container"><Reveal className="section-heading"><div><div className="section-label">05 / EDUCATION</div><h2>A foundation<br /><span>in engineering.</span></h2></div><GraduationCap className="section-icon" size={36} /></Reveal><Reveal className="education-main"><div className="education-year">2023 — PRESENT<span>BACHELOR’S DEGREE</span></div><div><h3>Indian Institute of Technology Kanpur</h3><p>B.Tech · Electrical Engineering</p></div><div className="grade">7.0<span>CPI / 10</span></div></Reveal><div className="school-grid"><Reveal className="school"><span>2022 · CLASS XII / RBSE</span><h3>M.D. Sr. Sec. School, Chirawa</h3><p>93.20%</p></Reveal><Reveal className="school"><span>2020 · CLASS X / RBSE</span><h3>M.D. Sr. Sec. School, Chirawa</h3><p>90.17%</p></Reveal></div><Reveal className="coursework"><h3>Relevant coursework</h3><div className="tags">{courses.map(course => <span key={course}>{course}</span>)}</div></Reveal></section>
-
-      <section id="achievements" className="section achievements-section"><div className="container"><Reveal className="section-heading"><div><div className="section-label">06 / BEYOND THE CODE</div><h2>Team spirit.<br /><span>On and off the field.</span></h2></div><p>Achievements and campus involvement<br />at IIT Kanpur.</p></Reveal><div className="achievements-grid"><Reveal className="achievement"><Trophy /><span>INFERNO ’24 · HOCKEY</span><h3>Second place.<br />Shared effort.</h3><p>Secured 2nd prize in Hockey at IIT Kanpur’s annual inter-pool sports championship.</p></Reveal><Reveal className="achievement"><span className="activity-symbol">↗</span><span>INFERNO ’24 · CRICKET</span><h3>Part of the game.</h3><p>Participated in Cricket at IIT Kanpur’s annual inter-pool sports championship.</p></Reveal><Reveal className="achievement"><span className="activity-symbol">✳</span><span>GALAXY ’24 · CULTURAL</span><h3>Representing the hall.</h3><p>Contributed to Galaxy ’24 events and represented the hall in the Galaxy Parade.</p></Reveal></div></div></section>
-
-      <section id="contact" className="section container contact-section"><Reveal><div className="section-label">07 / LET’S CONNECT</div><h2>Have something<br /><span>worth building?</span></h2><p>For software engineering opportunities, project conversations,<br className="desktop-break" /> or a simple hello — get in touch.</p><a className="email-link" href={`mailto:${profile.email}`}>{profile.email}<ArrowUpRight /></a><div className="contact-actions"><a className="button primary" href={`mailto:${profile.email}`}><Mail size={16} />Say hello<ArrowUpRight size={16} /></a><button className="button secondary" onClick={copyEmail}>{copied ? <Check size={16} /> : <Copy size={16} />}{copied ? 'Email copied' : 'Copy email'}</button></div><div className="copy-feedback" role="status">{copied ? 'Email address copied to clipboard.' : copyError ? `Please copy the email address above: ${profile.email}` : ''}</div><Socials text /></Reveal><Reveal className="resume-panel"><div className="resume-icon"><ArrowDownToLine size={27} /></div><div className="section-label">THE COMPLETE PICTURE</div><h3>My experience.<br />In one document.</h3><p>Projects, technical skills, education,<br />and experience from my resume.</p><a href="/resume.pdf" download="Nitesh-Kumar-Resume.pdf" className="text-link">Download resume <ArrowDownToLine size={17} /></a><span className="pdf-label">PDF DOCUMENT</span></Reveal></section>
+    <main id="main" className={`site-main page-${currentPage.id}`}>
+      {currentPage.id !== 'home' && <div className="route-intro container"><div className="breadcrumbs"><a href="/">Home</a><ArrowRight size={12} aria-hidden="true" /><span>{currentPage.label}</span></div><h1>{currentPage.label}</h1></div>}
+      <m.div className="page-content" initial={reduced ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .35 }}>{content}</m.div>
     </main>
-    <footer className="container footer"><a className="brand" href="#" aria-label="Back to top">n<span>k</span><i>.</i></a><span>© {new Date().getFullYear()} Nitesh Kumar</span><span className="footer-note">Built with intention. Always learning.</span><a href="#main" className="back-top">Back to top<ArrowUpRight size={14} /></a></footer>
+    <footer className="container footer"><a className="brand" href="/" aria-label="Nitesh Kumar home">n<span>k</span><i>.</i></a><span>© {new Date().getFullYear()} Nitesh Kumar</span><span className="footer-note">Built with intention. Always learning.</span><a href="#main" className="back-top">Back to top<ArrowUpRight size={14} /></a></footer>
   </LazyMotion>
 }
 

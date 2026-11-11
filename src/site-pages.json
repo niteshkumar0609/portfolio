@@ -1,0 +1,44 @@
+[
+  {
+    "id": "home",
+    "label": "Home",
+    "path": "/",
+    "title": "Nitesh Kumar | Undergraduate at IIT Kanpur",
+    "description": "Nitesh Kumar — IIT Kanpur undergraduate building with React and TypeScript. Explore my projects, interactive UI Lab, engineering experience, and background."
+  },
+  {
+    "id": "about",
+    "label": "About",
+    "path": "/about/",
+    "title": "About | Nitesh Kumar — IIT Kanpur Undergraduate",
+    "description": "Get to know Nitesh Kumar: Electrical Engineering undergraduate at IIT Kanpur. Explore technical skills, education, coursework, and campus achievements."
+  },
+  {
+    "id": "projects",
+    "label": "Projects",
+    "path": "/projects/",
+    "title": "Projects | Nitesh Kumar — IIT Kanpur Undergraduate",
+    "description": "Explore Nitesh Kumar's engineering projects: a C++ key-value store, Flutter ticketing application, BERT sentiment classifier, and applied machine learning."
+  },
+  {
+    "id": "ui-lab",
+    "label": "UI Lab",
+    "path": "/ui-lab/",
+    "title": "Interactive UI Lab | Nitesh Kumar — IIT Kanpur Undergraduate",
+    "description": "Try Nitesh Kumar's live React and TypeScript UI Lab: responsive layouts, accent themes, component states, and accessible perspective interactions."
+  },
+  {
+    "id": "experience",
+    "label": "Experience",
+    "path": "/experience/",
+    "title": "Experience | Nitesh Kumar — IIT Kanpur Undergraduate",
+    "description": "Nitesh Kumar's backend development experience at EleWin: Node.js and Express REST APIs, MongoDB data workflows, JWT authentication, and role-based access control."
+  },
+  {
+    "id": "contact",
+    "label": "Contact",
+    "path": "/contact/",
+    "title": "Contact & Resume | Nitesh Kumar — IIT Kanpur Undergraduate",
+    "description": "Contact Nitesh Kumar at niteshku23@iitk.ac.in, connect on GitHub and LinkedIn, or download the original resume."
+  }
+]
