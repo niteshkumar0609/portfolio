@@ -8,12 +8,13 @@ test('portfolio renders without runtime errors or horizontal overflow', async ({
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/')
   await expect(page).toHaveTitle('Nitesh Kumar | Software Developer')
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Turning logic into')
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Building APIs.')
   for (const section of ['about', 'projects', 'experience', 'skills', 'education', 'achievements', 'contact']) {
     await expect(page.locator(`#${section}`)).toBeAttached()
   }
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
-  await page.screenshot({ path: testInfo.outputPath('portfolio.png'), fullPage: true })
+  await page.locator('.hero').screenshot({ path: testInfo.outputPath('hero.png'), scale: 'css' })
+  await page.screenshot({ path: testInfo.outputPath('portfolio.png'), fullPage: true, scale: 'css' })
   expect(errors).toEqual([])
 })
 
@@ -87,4 +88,25 @@ test('resume is downloadable and copy email reports success', async ({ page, con
   await page.getByRole('button', { name: 'Copy email' }).click()
   await expect(page.getByRole('status')).toHaveText('Email address copied to clipboard.')
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(profile.email)
+})
+
+test('portrait loads efficiently and respects reduced motion', async ({ page, request }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+  const portrait = page.getByRole('img', { name: 'Professional portrait of Nitesh Kumar, wearing glasses and a checkered shirt' })
+  await expect(portrait).toBeVisible()
+  await expect.poll(() => portrait.evaluate(image => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
+  expect(await portrait.evaluate(image => (image as HTMLImageElement).currentSrc)).toMatch(/profile-(480|800)\.webp$/)
+  await expect(portrait).toHaveAttribute('fetchpriority', 'high')
+  await expect(page.locator('.portrait-halo')).toHaveCSS('animation-name', 'none')
+  const fallback = await request.get('/images/profile.jpg')
+  expect(fallback.ok()).toBe(true)
+  expect(fallback.headers()['content-type']).toContain('image/jpeg')
+  expect((await fallback.body()).subarray(0, 2).toString('hex')).toBe('ffd8')
+  expect(await page.evaluate(async () => {
+    const image = new Image()
+    image.src = '/images/profile.jpg'
+    await image.decode()
+    return image.naturalWidth > 0 && image.naturalHeight > 0
+  })).toBe(true)
 })

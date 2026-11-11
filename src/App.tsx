@@ -1,14 +1,50 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from 'motion/react'
-import { ArrowDown, ArrowDownToLine, ArrowRight, ArrowUpRight, Check, ChevronDown, Code2, Copy, Database, ExternalLink, Github, GraduationCap, Layers3, Linkedin, Mail, Menu, Terminal, Trophy, X } from 'lucide-react'
+import { ArrowDown, ArrowDownToLine, ArrowRight, ArrowUpRight, BrainCircuit, Check, ChevronDown, Code2, Copy, Database, ExternalLink, Github, GraduationCap, Layers3, Linkedin, Mail, Menu, Sparkles, Terminal, Trophy, Wrench, X } from 'lucide-react'
 import { courses, profile, projects, skills } from './data'
 
 const nav = [['About', 'about'], ['Projects', 'projects'], ['Experience', 'experience'], ['Skills', 'skills']] as const
+const skillIcons = [Code2, Database, Layers3, BrainCircuit, Sparkles, Wrench]
 
-function Reveal({ children, className = '' }: { children: ReactNode; className?: string }) {
+function Reveal({ children, className = '', interactive = false }: { children: ReactNode; className?: string; interactive?: boolean }) {
   const reduced = useReducedMotion()
-  return <m.div className={className} initial={reduced ? false : { opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.08 }} transition={{ duration: 0.55 }}>{children}</m.div>
+  return <m.div className={className} initial={reduced ? false : { opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} whileHover={interactive && !reduced ? { y: -4 } : undefined} viewport={{ once: true, amount: 0.08 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>{children}</m.div>
+}
+
+function Portrait() {
+  return <Reveal className="hero-visual">
+    <div className="portrait-wrap">
+      <div className="portrait-halo" aria-hidden="true" />
+      <figure className="portrait-frame">
+        <div className="portrait-topline"><span className="portrait-monogram">NK</span><span>A LITTLE MORE HUMAN</span><span className="portrait-dot" /></div>
+        <picture>
+          <source type="image/webp" srcSet="/images/profile-480.webp 480w, /images/profile-800.webp 800w" sizes="(max-width: 600px) 82vw, (max-width: 1000px) 40vw, 380px" />
+          <img src="/images/profile.jpg" width="800" height="811" alt="Professional portrait of Nitesh Kumar, wearing glasses and a checkered shirt" fetchPriority="high" decoding="async" />
+        </picture>
+        <figcaption><div><strong>{profile.name}</strong><span>Developer · IIT Kanpur</span></div><Code2 size={22} aria-hidden="true" /></figcaption>
+      </figure>
+      <div className="portrait-note"><span /> Backend APIs. Systems. Applied ML.</div>
+    </div>
+  </Reveal>
+}
+
+function Hero() {
+  const reduced = useReducedMotion()
+  return <section className="hero container" aria-labelledby="hero-title">
+    <div className="hero-glow" aria-hidden="true" />
+    <Reveal className="hero-copy">
+      <div className="hero-kicker"><span /> SOFTWARE DEVELOPER · IIT KANPUR</div>
+      <m.p className="hero-greeting" initial={reduced ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6 }}>Hi, I’m <strong>{profile.name}.</strong></m.p>
+      <h1 id="hero-title">Building APIs.<br /><span>Thinking in systems.</span></h1>
+      <m.p className="hero-intro" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.7 }}>From authenticated backend services to a C++ storage engine — I turn engineering fundamentals into working software.</m.p>
+      <p className="hero-sub">Electrical Engineering undergraduate at IIT Kanpur.<br />Focused on backend engineering, systems, and applied ML.</p>
+      <div className="hero-actions"><a className="button primary" href="#projects">Explore my work<ArrowUpRight size={17} /></a><a className="button secondary" href="/resume.pdf" download="Nitesh-Kumar-Resume.pdf"><ArrowDownToLine size={16} /> Download resume</a></div>
+      <div className="hero-links"><a href={profile.github} target="_blank" rel="noopener noreferrer"><Github size={17} />GitHub<ArrowUpRight size={13} /></a><a href="#contact"><Mail size={17} />Let’s connect<ArrowUpRight size={13} /></a><a href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile (opens in a new tab)"><Linkedin size={17} /><span className="hero-link-label">LinkedIn</span><ArrowUpRight size={13} /></a></div>
+    </Reveal>
+    <Portrait />
+    <div className="hero-bottom"><span>BACKEND <i /> SYSTEMS <i /> MACHINE LEARNING</span><a href="#about">A little more about me<ArrowDown size={14} /></a></div>
+  </section>
 }
 
 function Socials({ text = false }: { text?: boolean }) {
@@ -33,16 +69,16 @@ function Architecture({ compact = false }: { compact?: boolean }) {
 
 function ProjectArt({ kind }: { kind: string }) {
   if (kind === 'store') return <Architecture compact />
-  if (kind === 'ticket') return <div className="project-art ticket-art" aria-hidden="true"><div className="ticket"><div className="ticket-heading"><span>ENTRY / ADMIN</span><Check size={17} /></div><div className="qr">{Array.from({ length: 49 }, (_, i) => <i key={i} className={(i * 7 + Math.floor(i / 7) * 3) % 5 < 3 ? 'filled' : ''} />)}</div><span className="ticket-label">QR-based verification</span><div className="ticket-perf" /><span className="ticket-status"><i /> Ticket management</span></div><span className="art-caption">FLUTTER + FIREBASE</span></div>
+  if (kind === 'ticket') return <div className="project-art ticket-art" aria-hidden="true"><span className="art-caption">APPLICATION WORKFLOW · ILLUSTRATION</span><div className="workflow"><div><span>01</span>Admin authentication<Check size={15} /></div><i /><div><span>02</span>Ticket management<Layers3 size={15} /></div><i /><div><span>03</span>QR entry verification<Check size={15} /></div></div><span className="art-footer">FLUTTER / FIREBASE / CLOUD FIRESTORE</span></div>
   if (kind === 'sentiment') return <div className="project-art sentiment-art" aria-hidden="true"><span className="art-caption">REVIEW → TOKENIZE → CLASSIFY</span><div className="token-row"><span>Customer</span><span>review</span><span>text</span></div><div className="bert-node">BERT<small>fine-tuned classifier</small></div><div className="sentiment-result"><span>Positive</span><span>Negative</span></div></div>
   return <div className={`project-art chart-art ${kind}`} aria-hidden="true"><span className="art-caption">{kind === 'attrition' ? 'FEATURES → MODELS → EVALUATION' : 'FEATURE ENGINEERING / TIME SERIES'}</span><svg viewBox="0 0 400 150" fill="none"><path className="chart-grid" d="M0 25H400M0 65H400M0 105H400M50 0V150M130 0V150M210 0V150M290 0V150M370 0V150" /><path className="chart-shadow" d="M0 132L30 114L60 122L90 88L120 100L150 62L180 78L210 42L240 58L270 32L300 50L330 18L360 30L400 8V150H0Z" /><path className="chart-line" d="M0 132L30 114L60 122L90 88L120 100L150 62L180 78L210 42L240 58L270 32L300 50L330 18L360 30L400 8" /></svg><span className="chart-label">{kind === 'attrition' ? 'Logistic Regression / Random Forest' : 'Random Forest / LSTM'}<small>Conceptual illustration · not measured results</small></span></div>
 }
 
 function ProjectCard({ project, index }: { project: typeof projects[number]; index: number }) {
   const [expanded, setExpanded] = useState(false)
-  return <Reveal className={`project-card ${index === 0 ? 'featured-card' : ''}`}>
+  return <Reveal interactive className={`project-card ${index === 0 ? 'featured-card' : ''}`}>
     <ProjectArt kind={project.visual} />
-    <div className="project-body"><div className="eyebrow"><span>{project.category}</span><span>0{index + 1}</span></div><h3>{project.title}</h3><p>{project.description}</p><div className="tags">{project.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
+    <div className="project-body"><div className="eyebrow"><span>{project.category}</span><span>0{index + 1}</span></div><h3>{project.title}</h3><p>{project.description}</p><div className="project-focus"><span>ENGINEERING FOCUS</span><p>{project.focus}</p></div><div className="tags">{project.tags.map(tag => <span key={tag}>{tag}</span>)}</div><div className="project-meta"><span>{project.context}</span><span>{project.date}</span></div>
       <button className="details-button" onClick={() => setExpanded(!expanded)} aria-expanded={expanded} aria-controls={`project-${index}`}>Engineering details<ChevronDown size={15} className={expanded ? 'rotate' : ''} /></button>
       <div id={`project-${index}`} hidden={!expanded} className="project-details"><p className="project-context">{project.context} · {project.date}</p><ul>{project.details.map(detail => <li key={detail}>{detail}</li>)}</ul></div>
       {project.url && <a className="project-source" href={project.url} target="_blank" rel="noopener noreferrer"><Github size={15} /> View source<ArrowUpRight size={15} /></a>}
@@ -77,7 +113,7 @@ function App() {
       <AnimatePresence>{menuOpen && <m.nav id="mobile-nav" className="mobile-nav" aria-label="Mobile navigation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>{[...nav, ['Contact', 'contact']].map(([label, id]) => <a key={id} onClick={() => setMenuOpen(false)} href={`#${id}`}>{label}<ArrowUpRight size={16} /></a>)}</m.nav>}</AnimatePresence>
     </header>
     <main id="main">
-      <section className="hero container" aria-labelledby="hero-title"><div className="hero-glow" /><Reveal className="hero-copy"><div className="hero-kicker"><span /> SOFTWARE DEVELOPER · IIT KANPUR</div><h1 id="hero-title">Turning logic into<br /><span>working systems.</span></h1><p className="hero-intro">Hi, I’m <strong>Nitesh Kumar.</strong> I build backend APIs, explore systems in C++, and bring ideas to life with code.</p><p className="hero-sub">Electrical Engineering undergraduate at IIT Kanpur.<br />Focused on backend engineering, systems, and applied ML.</p><div className="hero-actions"><a className="button primary" href="#projects">Explore my work<ArrowUpRight size={17} /></a><a className="button secondary" href="/resume.pdf" download="Nitesh-Kumar-Resume.pdf"><ArrowDownToLine size={16} /> Download resume</a></div><Socials text /></Reveal><Reveal className="hero-visual"><div className="visual-label"><span>UNDER THE HOOD</span><span>01 / SYSTEMS</span></div><Architecture /><div className="visual-note"><span className="little-line" /> Small components. Thoughtful architecture.</div></Reveal><div className="hero-bottom"><span>BACKEND <i /> SYSTEMS <i /> MACHINE LEARNING</span><a href="#about">A little more about me<ArrowDown size={14} /></a></div></section>
+      <Hero />
 
       <section id="about" className="section container"><Reveal className="about-grid"><div><div className="section-label">01 / ABOUT</div><h2>An engineering mindset.<br /><span>A builder’s curiosity.</span></h2></div><div className="about-copy"><p>I’m a fourth-year Electrical Engineering undergraduate at the Indian Institute of Technology Kanpur, with hands-on experience building backend services at EleWin.</p><p>My work spans authenticated recruiter APIs, a modular C++ storage engine, Flutter ticketing workflows, and machine learning models. Across these projects, I’ve worked with data structures, application architecture, and model evaluation.</p><a className="text-link" href="#experience">See where I’ve contributed<ArrowRight size={16} /></a></div></Reveal><Reveal className="focus-strip"><div><Code2 /><span>Backend development<small>APIs, authentication & data workflows</small></span></div><div><Database /><span>Systems thinking<small>Data structures, modularity & persistence</small></span></div><div><Layers3 /><span>Applied machine learning<small>Text, tabular data & time series</small></span></div></Reveal></section>
 
@@ -85,7 +121,7 @@ function App() {
 
       <section id="experience" className="section container"><Reveal className="section-heading"><div><div className="section-label">03 / EXPERIENCE</div><h2>Building for<br /><span>real workflows.</span></h2></div><span className="section-side-note">BACKEND ENGINEERING</span></Reveal><Reveal className="experience"><div className="experience-meta"><span className="experience-mark">E<span>↗</span></span><h3>EleWin</h3><p>Apr 2026 – Jul 2026</p><a href="https://app.elewin.in" className="text-link" target="_blank" rel="noopener noreferrer">Company platform<ExternalLink size={13} /></a></div><div className="experience-body"><div className="role-label">WORK EXPERIENCE</div><h3>Backend Developer</h3><p>Developed the API layer behind recruiter workflows, from job management to candidate review and shortlisting.</p><ul><li>Built REST APIs with Node.js, Express.js, and MongoDB for job roles, candidate search, filtering, and profiles.</li><li>Implemented reusable JWT authentication, validation, and role-based access control middleware for protected recruiter APIs.</li><li>Designed job and candidate status APIs to support reviews, shortlisting, and updates.</li><li>Developed recruiter dashboard APIs with MongoDB queries and error handling to retrieve candidate and job data.</li></ul><div className="tags">{['Node.js', 'Express.js', 'MongoDB', 'JWT', 'RBAC'].map(tag => <span key={tag}>{tag}</span>)}</div></div></Reveal></section>
 
-      <section id="skills" className="section skills-section"><div className="container"><Reveal className="section-heading"><div><div className="section-label">04 / TECHNICAL TOOLKIT</div><h2>The tools behind<br /><span>the work.</span></h2></div><p>Languages, frameworks, and tools<br />from my technical experience and projects.</p></Reveal><div className="skills-grid">{skills.map((group, index) => <Reveal className="skill-group" key={group.title}><span className="skill-number">0{index + 1}</span><h3>{group.title}</h3><div className="skill-items">{group.items.map(skill => <span key={skill}>{skill}</span>)}</div></Reveal>)}</div></div></section>
+      <section id="skills" className="section skills-section"><div className="container"><Reveal className="section-heading"><div><div className="section-label">04 / TECHNICAL TOOLKIT</div><h2>The tools behind<br /><span>the work.</span></h2></div><p>Languages, frameworks, and tools<br />from my technical experience and projects.</p></Reveal><div className="skills-grid">{skills.map((group, index) => { const Icon = skillIcons[index]; return <Reveal className="skill-group" key={group.title}><div className="skill-header"><Icon size={21} aria-hidden="true" /><span className="skill-number">0{index + 1}</span></div><h3>{group.title}</h3><div className="skill-items">{group.items.map(skill => <span key={skill}>{skill}</span>)}</div></Reveal> })}</div></div></section>
 
       <section id="education" className="section container"><Reveal className="section-heading"><div><div className="section-label">05 / EDUCATION</div><h2>A foundation<br /><span>in engineering.</span></h2></div><GraduationCap className="section-icon" size={36} /></Reveal><Reveal className="education-main"><div className="education-year">2023 — PRESENT<span>BACHELOR’S DEGREE</span></div><div><h3>Indian Institute of Technology Kanpur</h3><p>B.Tech · Electrical Engineering</p></div><div className="grade">7.0<span>CPI / 10</span></div></Reveal><div className="school-grid"><Reveal className="school"><span>2022 · CLASS XII / RBSE</span><h3>M.D. Sr. Sec. School, Chirawa</h3><p>93.20%</p></Reveal><Reveal className="school"><span>2020 · CLASS X / RBSE</span><h3>M.D. Sr. Sec. School, Chirawa</h3><p>90.17%</p></Reveal></div><Reveal className="coursework"><h3>Relevant coursework</h3><div className="tags">{courses.map(course => <span key={course}>{course}</span>)}</div></Reveal></section>
 

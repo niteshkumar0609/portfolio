@@ -33,8 +33,13 @@ The production preview is normally at http://127.0.0.1:4173. Build output is in 
 - `src/data.ts`: verified personal information, skills, project descriptions, and exact resume URLs.
 - `src/App.tsx`: sections, interactions, and conceptual project illustrations.
 - `src/styles.css`: responsive dark theme, focus styles, and reduced-motion behavior.
+- `src/refinements.css`: portrait-led charcoal theme, card refinements, timeline styling, and responsive visual upgrades.
+- `profile.jpg`: portrait source, recreated from the previously supplied photo because no root `profile.jpg` was present during implementation. Facial features and colors were not retouched.
+- `public/images/`: optimized 480px/800px WebP portraits plus an 800px JPEG fallback. The hero uses responsive image selection, high fetch priority, and a matching preload.
 - `public/resume.pdf`: original resume served by the download buttons. Replace it when updating your resume.
 - `index.html`: title, description, social metadata, and Person structured data.
+
+The visual upgrade preserves the existing resume content. It adds a portrait-led hero, gently animated lighting (disabled for reduced motion), clearer project engineering summaries, and timeline styling. Canonical, social-image, and sitemap URLs use the verified Vercel domain above. Future updates must be reviewed and explicitly approved before pushing or deploying.
 
 The stock forecasting resume claim of 90% accuracy is shown only in expanded project details with its metric-definition limitation. Charts are conceptual illustrations, not measured results. No project repositories or live demos are invented for projects without links in the resume. The contact links open the visitor’s email client; no backend or form service is required. Copy email requires a secure context (HTTPS or localhost) and reports failure accessibly.
 

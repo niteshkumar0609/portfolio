@@ -9,6 +9,7 @@ export const projects = [
   {
     title: 'In-Memory Key-Value Store',
     category: 'Systems engineering',
+    focus: 'Fast lookups, automatic expiration, and database state recovery through separate C++ modules.',
     date: 'May – Jul 2026',
     context: 'Self project',
     description: 'A C++ storage engine that brings together fast lookups, key expiration, and persistence in a modular, object-oriented design.',
@@ -24,6 +25,7 @@ export const projects = [
   {
     title: 'Digitizing Entry With Flutter',
     category: 'Mobile development',
+    focus: 'Secure admin access and connected ticket-management and entry-verification workflows.',
     date: 'May – Jul 2025',
     context: 'Project Mentor · ACA',
     description: 'An admin application for managing ticket pricing, time slots, bookings, and QR-based entry verification.',
@@ -38,6 +40,7 @@ export const projects = [
   {
     title: 'AI 101 · Sentiment Classification',
     category: 'Natural language processing',
+    focus: 'Adapting a pre-trained language model to customer reviews through task-specific fine-tuning.',
     date: 'Dec 2024 – Feb 2025',
     context: 'Electrical Engineering Association · IIT Kanpur',
     description: 'Fine-tuned a pre-trained BERT model to classify customer reviews into positive and negative sentiments.',
@@ -52,6 +55,7 @@ export const projects = [
   {
     title: 'Employee Attrition Predictor',
     category: 'Applied machine learning',
+    focus: 'Preparing HR data and comparing classification models with cross-validation and multiple metrics.',
     date: 'May – Jul 2025',
     context: 'EE708 course project · Prof. Rajesh M. Hegde',
     description: 'Predicted employee turnover risk using the IBM HR Analytics dataset, with 74% accuracy reported in the resume.',
@@ -66,6 +70,7 @@ export const projects = [
   {
     title: 'Stock Price Forecasting & Analysis',
     category: 'Time-series analysis',
+    focus: 'Engineering temporal features and comparing Random Forest and LSTM forecasting models.',
     date: 'May – Jul 2024',
     context: 'Self project',
     description: 'Explored financial forecasting through engineered features and Random Forest and LSTM models.',
