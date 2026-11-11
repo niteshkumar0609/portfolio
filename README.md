@@ -2,6 +2,10 @@
 
 A responsive React, TypeScript, and Vite portfolio with Tailwind CSS v4, Motion for React, and Lucide React. All biographical content and external profile/project links come from the supplied `resume.pdf`.
 
+**Live portfolio:** https://portfolio-nine-tan-21.vercel.app
+
+**Source repository:** https://github.com/niteshkumar0609/portfolio
+
 ## Run locally
 
 Use Node.js 22.13 or newer (a current supported LTS release is recommended).
@@ -38,7 +42,7 @@ The minimatch override patches a transitive development-tool dependency advisory
 
 ## Deploy to Vercel when ready
 
-Nothing has been deployed or published automatically.
+The initial production deployment was published through Vercel CLI with the owner's approval. The production URL above was verified without authentication.
 
 1. Push this folder to a GitHub repository of your choice. Do not commit `node_modules`, `dist`, or secrets.
 2. In Vercel, select **Add New → Project** and import that repository.
@@ -73,5 +77,7 @@ Creating a public repository, pushing code, and deploying all require the owner'
 3. Review changes with `git diff`, stage the intended files, and create a descriptive commit.
 4. After publishing approval, push your branch. If you have connected Vercel's Git integration, pushing the production branch will automatically publish it; otherwise deploy explicitly with `vercel --prod` after approval.
 5. Verify the public page, resume download, contact links, and mobile layout after publication.
+
+The initial Vercel deployment did not connect GitHub automation: the Vercel account requires a GitHub Login Connection first. Until you add that connection and run `vercel git connect`, pushing to GitHub alone will not redeploy the site. Use the approved manual workflow with `vercel.cmd --prod` on Windows. Vercel may supply the download filename `resume.pdf`; browser checks verify the downloaded file exactly matches the original PDF.
 
 This is a personal portfolio: name, university email, education, experience, public profile links, and the downloadable resume are intentionally public when published. Secrets, local credentials, environment files, generated output, and browser-test artifacts are excluded from Git.

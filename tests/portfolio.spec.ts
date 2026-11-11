@@ -79,8 +79,11 @@ test('resume is downloadable and copy email reports success', async ({ page, con
   const downloadPending = page.waitForEvent('download')
   await page.getByRole('link', { name: 'Download resume', exact: true }).first().click()
   const download = await downloadPending
-  expect(download.suggestedFilename()).toBe('Nitesh-Kumar-Resume.pdf')
+  expect(download.suggestedFilename()).toMatch(/\.pdf$/i)
   expect(await download.failure()).toBeNull()
+  const downloadPath = await download.path()
+  if (!downloadPath) throw new Error('Resume download did not produce a local file')
+  expect(readFileSync(downloadPath)).toEqual(readFileSync('public/resume.pdf'))
   await page.getByRole('button', { name: 'Copy email' }).click()
   await expect(page.getByRole('status')).toHaveText('Email address copied to clipboard.')
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(profile.email)
