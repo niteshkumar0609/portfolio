@@ -41,6 +41,8 @@ The production preview is normally at http://127.0.0.1:4173. Build output is in 
 
 The visual upgrade preserves the existing resume content. It adds a portrait-led hero, gently animated lighting (disabled for reduced motion), clearer project engineering summaries, and timeline styling. Canonical, social-image, and sitemap URLs use the verified Vercel domain above. Future updates must be reviewed and explicitly approved before pushing or deploying.
 
+The frontend-focused update adds a live UI Lab, palette and viewport controls, an accessible save toggle, a React component-pattern view, project filters, and a pointer-driven perspective effect. These demonstrate actual frontend behavior within this portfolio; they are not claims of additional employment, client work, or resume projects. The 3D effect uses CSS perspective and Motion springs, ignores touch input, and is disabled by reduced-motion preferences. No WebGL engine or new dependencies are required.
+
 The stock forecasting resume claim of 90% accuracy is shown only in expanded project details with its metric-definition limitation. Charts are conceptual illustrations, not measured results. No project repositories or live demos are invented for projects without links in the resume. The contact links open the visitor’s email client; no backend or form service is required. Copy email requires a secure context (HTTPS or localhost) and reports failure accessibly.
 
 The minimatch override patches a transitive development-tool dependency advisory. Keep the override under review when updating typescript-eslint.

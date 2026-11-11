@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from 'motion/react'
-import { ArrowDown, ArrowDownToLine, ArrowRight, ArrowUpRight, BrainCircuit, Check, ChevronDown, Code2, Copy, Database, ExternalLink, Github, GraduationCap, Layers3, Linkedin, Mail, Menu, Sparkles, Terminal, Trophy, Wrench, X } from 'lucide-react'
+import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion, useScroll, useSpring } from 'motion/react'
+import { ArrowDown, ArrowDownToLine, ArrowRight, ArrowUpRight, Atom, BrainCircuit, Check, ChevronDown, Code2, Copy, Database, ExternalLink, Github, GraduationCap, Layers3, Linkedin, Mail, Menu, Sparkles, Terminal, Trophy, Wrench, X } from 'lucide-react'
 import { courses, profile, projects, skills } from './data'
+import InterfaceLab from './components/InterfaceLab'
+import Tilt from './components/Tilt'
 
-const nav = [['About', 'about'], ['Projects', 'projects'], ['Experience', 'experience'], ['Skills', 'skills']] as const
+const nav = [['Projects', 'projects'], ['UI Lab', 'playground'], ['About', 'about'], ['Experience', 'experience'], ['Skills', 'skills']] as const
 const skillIcons = [Code2, Database, Layers3, BrainCircuit, Sparkles, Wrench]
+const frontendSkillsFirst = [2, 0, 5, 1, 3, 4].map(index => ({ ...skills[index], Icon: skillIcons[index] }))
 
 function Reveal({ children, className = '', interactive = false }: { children: ReactNode; className?: string; interactive?: boolean }) {
   const reduced = useReducedMotion()
@@ -16,15 +19,20 @@ function Portrait() {
   return <Reveal className="hero-visual">
     <div className="portrait-wrap">
       <div className="portrait-halo" aria-hidden="true" />
+      <div className="portrait-orbit-clip" aria-hidden="true"><div className="portrait-orbit" /></div>
+      <Tilt className="portrait-tilt">
       <figure className="portrait-frame">
-        <div className="portrait-topline"><span className="portrait-monogram">NK</span><span>A LITTLE MORE HUMAN</span><span className="portrait-dot" /></div>
+        <div className="portrait-topline"><span className="portrait-monogram">NK</span><span>DESIGN MEETS ENGINEERING</span><span className="portrait-dot" /></div>
         <picture>
           <source type="image/webp" srcSet="/images/profile-480.webp 480w, /images/profile-800.webp 800w" sizes="(max-width: 600px) 82vw, (max-width: 1000px) 40vw, 380px" />
           <img src="/images/profile.jpg" width="800" height="811" alt="Professional portrait of Nitesh Kumar, wearing glasses and a checkered shirt" fetchPriority="high" decoding="async" />
         </picture>
         <figcaption><div><strong>{profile.name}</strong><span>Developer · IIT Kanpur</span></div><Code2 size={22} aria-hidden="true" /></figcaption>
       </figure>
-      <div className="portrait-note"><span /> Backend APIs. Systems. Applied ML.</div>
+      <div className="portrait-chip chip-react" aria-hidden="true"><Atom size={22} /><span>React<small>Component thinking</small></span></div>
+      <div className="portrait-chip chip-typescript" aria-hidden="true"><span className="ts-mark">TS</span><span>TypeScript<small>Typed. Thoughtful.</small></span></div>
+      </Tilt>
+      <div className="portrait-note"><span /> Frontend craft. Engineering depth.</div>
     </div>
   </Reveal>
 }
@@ -34,17 +42,27 @@ function Hero() {
   return <section className="hero container" aria-labelledby="hero-title">
     <div className="hero-glow" aria-hidden="true" />
     <Reveal className="hero-copy">
-      <div className="hero-kicker"><span /> SOFTWARE DEVELOPER · IIT KANPUR</div>
+      <div className="hero-kicker"><span /> SOFTWARE DEVELOPER · REACT / TYPESCRIPT</div>
       <m.p className="hero-greeting" initial={reduced ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.6 }}>Hi, I’m <strong>{profile.name}.</strong></m.p>
-      <h1 id="hero-title">Building APIs.<br /><span>Thinking in systems.</span></h1>
-      <m.p className="hero-intro" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.7 }}>From authenticated backend services to a C++ storage engine — I turn engineering fundamentals into working software.</m.p>
-      <p className="hero-sub">Electrical Engineering undergraduate at IIT Kanpur.<br />Focused on backend engineering, systems, and applied ML.</p>
+      <h1 id="hero-title">Thoughtful interfaces.<br /><span>Solid engineering.</span></h1>
+      <m.p className="hero-intro" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.7 }}>I build with React and TypeScript, bringing an engineering background in backend APIs, C++ systems, and applied machine learning to the frontend.</m.p>
+      <p className="hero-sub">Electrical Engineering undergraduate at IIT Kanpur.<br />Curious about how software looks, feels, and works.</p>
       <div className="hero-actions"><a className="button primary" href="#projects">Explore my work<ArrowUpRight size={17} /></a><a className="button secondary" href="/resume.pdf" download="Nitesh-Kumar-Resume.pdf"><ArrowDownToLine size={16} /> Download resume</a></div>
       <div className="hero-links"><a href={profile.github} target="_blank" rel="noopener noreferrer"><Github size={17} />GitHub<ArrowUpRight size={13} /></a><a href="#contact"><Mail size={17} />Let’s connect<ArrowUpRight size={13} /></a><a href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile (opens in a new tab)"><Linkedin size={17} /><span className="hero-link-label">LinkedIn</span><ArrowUpRight size={13} /></a></div>
+      <a className="hero-lab-link" href="#playground"><MouseIcon />Try the interactive UI lab<ArrowRight size={14} /></a>
     </Reveal>
     <Portrait />
-    <div className="hero-bottom"><span>BACKEND <i /> SYSTEMS <i /> MACHINE LEARNING</span><a href="#about">A little more about me<ArrowDown size={14} /></a></div>
+    <div className="hero-bottom"><span>REACT <i /> TYPESCRIPT <i /> INTERACTION & MOTION</span><a href="#playground">Scroll to explore<ArrowDown size={14} /></a></div>
   </section>
+}
+
+function MouseIcon() { return <Sparkles size={14} aria-hidden="true" /> }
+
+function ProjectsSection() {
+  const [filter, setFilter] = useState('All work')
+  const options = ['All work', 'Applications', 'Systems', 'Machine learning']
+  const visibleProjects = projects.filter(project => filter === 'All work' || (filter === 'Applications' ? project.visual === 'ticket' : filter === 'Systems' ? project.visual === 'store' : !['ticket', 'store'].includes(project.visual)))
+  return <section id="projects" className="section projects-section"><div className="container"><Reveal className="section-heading"><div><div className="section-label">02 / SELECTED WORK</div><h2>Interfaces to internals.<br /><span>Built with intent.</span></h2></div><p>Explore the frontend work in the UI Lab above,<br />then the engineering projects from my resume.</p></Reveal><div className="project-toolbar"><div role="group" aria-label="Filter projects" className="project-filters">{options.map(option => <button key={option} aria-pressed={filter === option} onClick={() => setFilter(option)}>{option}</button>)}</div><span className="project-count" aria-live="polite">{visibleProjects.length} {visibleProjects.length === 1 ? 'project' : 'projects'}</span></div><div className="projects-grid">{visibleProjects.map(project => <ProjectCard key={project.title} project={project} index={projects.indexOf(project)} />)}</div><a href={profile.github} className="github-banner" target="_blank" rel="noopener noreferrer"><div><Github size={21} /><span>More code. More context.<small>Explore my GitHub profile.</small></span></div><ArrowUpRight size={22} /></a></div></section>
 }
 
 function Socials({ text = false }: { text?: boolean }) {
@@ -87,6 +105,8 @@ function ProjectCard({ project, index }: { project: typeof projects[number]; ind
 }
 
 function App() {
+  const { scrollYProgress } = useScroll()
+  const readingProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
   const [menuOpen, setMenuOpen] = useState(false)
   const [copied, setCopied] = useState(false)
   const [copyError, setCopyError] = useState(false)
@@ -110,18 +130,20 @@ function App() {
   }
   return <LazyMotion features={domAnimation}><a href="#main" className="skip-link">Skip to content</a>
     <header className="header"><div className="container nav-inner"><a href="#" className="brand" aria-label="Nitesh Kumar home">n<span>k</span><i>.</i></a><nav className="desktop-nav" aria-label="Main navigation">{nav.map(([label, id]) => <a key={id} href={`#${id}`}>{label}</a>)}</nav><a className="nav-contact" href="#contact">Let’s talk<ArrowUpRight size={15} /></a><button ref={menuButton} className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-nav" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}>{menuOpen ? <X /> : <Menu />}</button></div>
+      <m.div className="reading-progress" style={{ scaleX: readingProgress }} aria-hidden="true" />
       <AnimatePresence>{menuOpen && <m.nav id="mobile-nav" className="mobile-nav" aria-label="Mobile navigation" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>{[...nav, ['Contact', 'contact']].map(([label, id]) => <a key={id} onClick={() => setMenuOpen(false)} href={`#${id}`}>{label}<ArrowUpRight size={16} /></a>)}</m.nav>}</AnimatePresence>
     </header>
     <main id="main">
       <Hero />
+      <InterfaceLab />
 
       <section id="about" className="section container"><Reveal className="about-grid"><div><div className="section-label">01 / ABOUT</div><h2>An engineering mindset.<br /><span>A builder’s curiosity.</span></h2></div><div className="about-copy"><p>I’m a fourth-year Electrical Engineering undergraduate at the Indian Institute of Technology Kanpur, with hands-on experience building backend services at EleWin.</p><p>My work spans authenticated recruiter APIs, a modular C++ storage engine, Flutter ticketing workflows, and machine learning models. Across these projects, I’ve worked with data structures, application architecture, and model evaluation.</p><a className="text-link" href="#experience">See where I’ve contributed<ArrowRight size={16} /></a></div></Reveal><Reveal className="focus-strip"><div><Code2 /><span>Backend development<small>APIs, authentication & data workflows</small></span></div><div><Database /><span>Systems thinking<small>Data structures, modularity & persistence</small></span></div><div><Layers3 /><span>Applied machine learning<small>Text, tabular data & time series</small></span></div></Reveal></section>
 
-      <section id="projects" className="section projects-section"><div className="container"><Reveal className="section-heading"><div><div className="section-label">02 / SELECTED WORK</div><h2>Built to learn.<br /><span>Engineered to work.</span></h2></div><p>From storage internals to real-world workflows.<br />A closer look at my engineering projects.</p></Reveal><div className="projects-grid">{projects.map((project, index) => <ProjectCard key={project.title} project={project} index={index} />)}</div><a href={profile.github} className="github-banner" target="_blank" rel="noopener noreferrer"><div><Github size={21} /><span>More code. More context.<small>Explore my GitHub profile.</small></span></div><ArrowUpRight size={22} /></a></div></section>
+      <ProjectsSection />
 
       <section id="experience" className="section container"><Reveal className="section-heading"><div><div className="section-label">03 / EXPERIENCE</div><h2>Building for<br /><span>real workflows.</span></h2></div><span className="section-side-note">BACKEND ENGINEERING</span></Reveal><Reveal className="experience"><div className="experience-meta"><span className="experience-mark">E<span>↗</span></span><h3>EleWin</h3><p>Apr 2026 – Jul 2026</p><a href="https://app.elewin.in" className="text-link" target="_blank" rel="noopener noreferrer">Company platform<ExternalLink size={13} /></a></div><div className="experience-body"><div className="role-label">WORK EXPERIENCE</div><h3>Backend Developer</h3><p>Developed the API layer behind recruiter workflows, from job management to candidate review and shortlisting.</p><ul><li>Built REST APIs with Node.js, Express.js, and MongoDB for job roles, candidate search, filtering, and profiles.</li><li>Implemented reusable JWT authentication, validation, and role-based access control middleware for protected recruiter APIs.</li><li>Designed job and candidate status APIs to support reviews, shortlisting, and updates.</li><li>Developed recruiter dashboard APIs with MongoDB queries and error handling to retrieve candidate and job data.</li></ul><div className="tags">{['Node.js', 'Express.js', 'MongoDB', 'JWT', 'RBAC'].map(tag => <span key={tag}>{tag}</span>)}</div></div></Reveal></section>
 
-      <section id="skills" className="section skills-section"><div className="container"><Reveal className="section-heading"><div><div className="section-label">04 / TECHNICAL TOOLKIT</div><h2>The tools behind<br /><span>the work.</span></h2></div><p>Languages, frameworks, and tools<br />from my technical experience and projects.</p></Reveal><div className="skills-grid">{skills.map((group, index) => { const Icon = skillIcons[index]; return <Reveal className="skill-group" key={group.title}><div className="skill-header"><Icon size={21} aria-hidden="true" /><span className="skill-number">0{index + 1}</span></div><h3>{group.title}</h3><div className="skill-items">{group.items.map(skill => <span key={skill}>{skill}</span>)}</div></Reveal> })}</div></div></section>
+      <section id="skills" className="section skills-section"><div className="container"><Reveal className="section-heading"><div><div className="section-label">04 / TECHNICAL TOOLKIT</div><h2>The tools behind<br /><span>the work.</span></h2></div><p>Languages, frameworks, and tools<br />from my technical experience and projects.</p></Reveal><div className="skills-grid">{frontendSkillsFirst.map((group, index) => { const Icon = group.Icon; return <Reveal className="skill-group" key={group.title}><div className="skill-header"><Icon size={21} aria-hidden="true" /><span className="skill-number">0{index + 1}</span></div><h3>{group.title}</h3><div className="skill-items">{group.items.map(skill => <span key={skill}>{skill}</span>)}</div></Reveal> })}</div></div></section>
 
       <section id="education" className="section container"><Reveal className="section-heading"><div><div className="section-label">05 / EDUCATION</div><h2>A foundation<br /><span>in engineering.</span></h2></div><GraduationCap className="section-icon" size={36} /></Reveal><Reveal className="education-main"><div className="education-year">2023 — PRESENT<span>BACHELOR’S DEGREE</span></div><div><h3>Indian Institute of Technology Kanpur</h3><p>B.Tech · Electrical Engineering</p></div><div className="grade">7.0<span>CPI / 10</span></div></Reveal><div className="school-grid"><Reveal className="school"><span>2022 · CLASS XII / RBSE</span><h3>M.D. Sr. Sec. School, Chirawa</h3><p>93.20%</p></Reveal><Reveal className="school"><span>2020 · CLASS X / RBSE</span><h3>M.D. Sr. Sec. School, Chirawa</h3><p>90.17%</p></Reveal></div><Reveal className="coursework"><h3>Relevant coursework</h3><div className="tags">{courses.map(course => <span key={course}>{course}</span>)}</div></Reveal></section>
 
